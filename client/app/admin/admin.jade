@@ -1,0 +1,174 @@
+extends /templates/page_base
+
+block main-headline
+  h1 Admin
+
+block main-content
+  #adminView
+    ul.nav.nav-tabs
+      li(ng-class="{active: vm.active === 'applications'}", ng-click="vm.active = 'applications'")
+        a(role="tab") Applications
+      li(ng-class="{active: vm.active === 'users'}", ng-click="vm.active = 'users'", ng-hide="vm.sponsorView")
+        a(role="tab") Users
+    .tab-content
+      .tab-pane(ng-class="{active: vm.active === 'applications'}")
+        p.lead.pull-left(ng-hide="vm.sponsorView")
+          small Export
+          | &nbsp;&nbsp;
+          span.btn-group(role="group")
+            a(target="_blank", href="/api/applications/export/all").btn.btn-jub
+              | All
+            a(target="_blank", href="/api/applications/export/accepted").btn.btn-jub
+              | Accepted
+            a(target="_blank", href="/api/applications/export/pending").btn.btn-jub
+              | Pending
+            a(target="_blank", href="/api/applications/export/visa").btn.btn-jub
+              | Visa Needed
+        p.lead.pull-right(ng-hide="vm.sponsorView")
+          button(type="button", ng-click="vm.showSubmitted = vm.showSubmitted ? false : true").btn.btn-jub
+            span(ng-show="vm.showSubmitted") Show Pending
+            span(ng-hide="vm.showSubmitted") Show Submitted
+          | &nbsp;&nbsp;
+          small
+            strong(ng-bind="vm.numberTotal") 0
+            | &nbsp;Applications - 
+            strong(ng-bind="vm.numberSubmitted" style="color: green;") 0
+            | &nbsp;Finished, &nbsp;
+            strong(ng-bind="vm.numberPending" style="color: orange;") 0
+            | &nbsp;Unfinished
+        span.clearfix
+        ul.event-list
+          li(ng-repeat='appl in vm.applications', ng-show="(appl.submitted && vm.showSubmitted) || (!appl.submitted && !vm.showSubmitted)")
+            img(ng-src="/api/users/gravatar/{{appl.user.email}}")
+            .info
+              h2.title 
+                | {{appl.user.name}} &nbsp;
+                span.label(ng-class="{'label-warning': (appl.status === 'open'), 'label-success': (appl.status === 'accepted'), 'label-danger': (appl.status === 'rejected')}") {{appl.status}}
+              p.desc {{appl.additionalInformation.discipline}} - {{appl.user.email}}
+              .content(ng-hide="vm.sponsorView")
+                .row
+                  .col-xs-6
+                    strong Address:
+                    br
+                    tt {{appl.personalInformation.address.street}}
+                    br 
+                    tt {{appl.personalInformation.address.city}}, {{appl.personalInformation.address.zip}}, {{appl.personalInformation.address.state}}
+                    br 
+                    tt {{appl.personalInformation.address.country}}
+                  .col-xs-6
+                    strong
+                      i.fa.fa-graduation-cap
+                      | &nbsp; University: &nbsp;
+                    tt {{appl.personalInformation.university}}
+                    br
+                    strong
+                      i.fa.fa-beer
+                      | &nbsp; Birthday: &nbsp;
+                    tt {{appl.personalInformation.birthday | date:'longDate'}}
+                    br
+                    strong
+                      i.fa.fa-phone
+                      | &nbsp; Telephone: &nbsp;
+                    tt {{appl.personalInformation.phone}}
+                    br
+                    strong
+                      i.fa.fa-flag
+                      | &nbsp; Nationality: &nbsp;
+                    tt {{appl.personalInformation.nationality}}
+                    br
+                    strong
+                      i.fa.fa-legal
+                      | &nbsp; Visa Needed: &nbsp;
+                    tt {{appl.personalInformation.visaNeeded}}
+                    br
+                    strong
+                      i.fa.fa-child
+                      | &nbsp; T-Shirt: &nbsp;
+                    tt {{appl.additionalInformation.shirt.type}}, {{appl.additionalInformation.shirt.size}}
+                .row.details(ng-show="appl.show")
+                  .col-xs-12
+                    p
+                      strong Careerloft Account? &nbsp;
+                      {{appl.additionalInformation.careerloft}}
+                    p 
+                      strong Where did you hear about jacobsHack!?
+                    p {{appl.additionalInformation.whereDidYouHear}}
+                    p 
+                      strong Previous Hackathon Experience
+                    p {{appl.additionalInformation.previousHackathons}}
+                    p 
+                      strong Previous (Cool) Projects
+                    p {{appl.additionalInformation.coolProjects}}
+                    p
+                      strong Dietary Restrictions
+                    p {{appl.additionalInformation.dietaryRestrictions}}
+                    p 
+                      strong Additional Remarks
+                    p {{appl.additionalInformation.remarks}}
+                    p 
+                      strong Preferred Teammates
+                    p {{appl.additionalInformation.teammates}}
+
+              ul.action-list
+                li(style="width:25%;", ng-click="appl.show = appl.show ? false : true", ng-hide="vm.sponsorView").standard
+                  span(ng-hide="appl.show") View &nbsp;
+                  span(ng-show="appl.show") Hide &nbsp;
+                  | Full &nbsp;
+                  i.fa.fa-eye
+                li(style="width:25%;", ng-hide="vm.sponsorView").standard
+                  a(ng-href="/api/applications/cv/{{appl.user._id}}", target="_blank")
+                    | Open CV &nbsp;
+                    i.fa.fa-external-link
+                li(style="width:25%;", ng-click="vm.accept(appl, $index)", ng-hide="vm.sponsorView").accept
+                  | Accept &nbsp;
+                  i.fa.fa-check
+                li(style="width:25%;", ng-click="vm.reject(appl, $index)", ng-hide="vm.sponsorView").reject
+                  | Reject &nbsp;
+                  i.fa.fa-times
+                li(style="width:100%;", ng-show="vm.sponsorView").standard
+                  a(ng-href="/api/applications/cv/{{appl.user._id}}", target="_blank")
+                    | Open CV &nbsp;
+                    i.fa.fa-external-link
+            .social
+              ul
+                li.facebook(style="width:33%;", ng-class="{disabled: !appl.personalInformation.profiles.facebook}")
+                  a(target="_blank", ng-href="{{appl.personalInformation.profiles.facebook || 'javascript:void(0);'}}")
+                    span.fa.fa-facebook
+                li.twitter(style="width:34%;", ng-class="{disabled: !appl.personalInformation.profiles.twitter}")
+                  a(target="_blank", ng-href="{{appl.personalInformation.profiles.twitter || 'javascript:void(0);'}}")
+                    span.fa.fa-twitter
+                li.github(style="width:33%;", ng-class="{disabled: !appl.personalInformation.profiles.github}")
+                  a(target="_blank", ng-href="{{appl.personalInformation.profiles.github || 'javascript:void(0);'}}")
+                    span.fa.fa-github
+                li.google-plus(style="width:33%;", ng-class="{disabled: !appl.personalInformation.profiles.googleplus}")
+                  a(target="_blank", ng-href="{{appl.personalInformation.profiles.googleplus || 'javascript:void(0);'}}")
+                    span.fa.fa-google-plus
+                li.linkedin(style="width:33%;", ng-class="{disabled: !appl.personalInformation.profiles.linkedin}")
+                  a(target="_blank", ng-href="http://{{appl.personalInformation.profiles.linkedin || 'javascript:void(0);'}}")
+                    span.fa.fa-linkedin
+
+      .tab-pane(ng-class="{active: vm.active === 'users'}", ng-hide="vm.sponsorView")
+        p.lead.text-right
+          small
+            strong(ng-bind="vm.users.length") 0
+            | &nbsp;Registered Users
+        ul.list-group
+          li.list-group-item(ng-repeat='user in vm.users')
+            .row
+              .col-xs-6
+                img.img-circle.pull-left.profile-picture(ng-src="/api/users/gravatar/{{user.email}}?s=80")
+                strong 
+                  {{user.name}} 
+                  span.label.label-default {{user.role}}
+                br
+                span.text-muted {{user.email}}
+              .col-xs-6
+                a.btn.btn-jub.btn-sm.pull-right.makeAdmin(ng-click='vm.admin(user, $index)')
+                  span(ng-show="user.role !== 'admin'") Make &nbsp;
+                  span(ng-show="user.role === 'admin'") Undo &nbsp;
+                  | Admin &nbsp;
+                  i.fa.fa-rebel
+                a.btn.btn-danger.btn-sm.pull-right.trash(ng-click='vm.delete(user)')
+                  | Delete &nbsp;
+                  i.glyphicon.glyphicon-trash
+

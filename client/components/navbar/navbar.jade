@@ -1,0 +1,30 @@
+header.attached-top(ng-controller='NavbarCtrl')
+  a(href="#").noHighlight
+    img(src="assets/images/jacobsHack_logo_hq.png").logoHeader
+    img(src="assets/images/jacobsHack_text_hq.png").logoHeader
+
+  ul.nav.nav-pills.pull-right
+    li
+      a(href='https://jacobshack.com') Back To Main Page
+
+    li(ng-show='showAdmin()', ng-class='{active: isActive("/admin")}')
+      a(href='/admin') Admin
+
+    li(ng-hide='isLoggedIn()', ng-class='{active: isActive("/signup")}')
+      a(href='/signup') Sign up
+
+    li(ng-hide='isLoggedIn()', ng-class='{active: isActive("/login")}')
+      a(href='/login') Login
+
+    li(ng-show='isLoggedIn()', ng-class='{active: isActive("/apply")}')
+      a(href='/apply') Apply
+
+    li.notClickable(ng-show='isLoggedIn()')
+      a(href='javascript:void(0);') Hello {{ getCurrentUser().name }}
+
+    li(ng-show='isLoggedIn()', ng-class='{active: isActive("/settings")}')
+      a(href='/settings')
+        span.glyphicon.glyphicon-cog
+
+    li(ng-show='isLoggedIn()', ng-class='{active: isActive("/logout")}')
+      a(href='', ng-click='logout()') Logout

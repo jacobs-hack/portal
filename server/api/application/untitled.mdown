@@ -1,0 +1,33 @@
+Rules:
+
+# 1. Fresh Code
+Only code that was written after the official start of the 'hacking phase' is valid. Teams can work on existing projects but during the presentation the team must clearly outline the part that was written during the hackathon and it shall be only judged on this part. Digital mockups and graphics may be prepared before. Additionally open-source frameworks and code that is available to everyone may be used. If you use another project of yours inside your hack it must be available to everyone and please mention it in the README in your repository.
+
+# 2. Code Reviews
+Even though the code quality is not a criteria, judges and organizers have to be granted a look on the source code on request. This might be necessary in cases where the judges or organziers question whether the code was written at the event.
+
+# 3. Team Size
+Teams of up to 4 humans are allowed. You can also add 1 cyborg, Furby, drone, or Sphero. (Credits to AngelHack)
+
+# 4. T-Shirts and Badges
+As we are hacking on a university campus we need to be able to clearly identify participants and non-participants. That's why we ask everyone to wear either the T-Shirt we hand out and clearly display the badge. It is also not permitted to pass either of it on to non-participants. If the organizers see such exchange the partcipant may be immediately banned from the event.
+
+# 5. Team Registration
+In order to participate in the actual competition and present your hack your team must be registered on the hackathon.io page of the event: [Here](http://www.hackathon.io/jacobshack-fall)
+
+# 6. Submission
+Until submission deadline all teams must be registered and all teammembers need to have joined the team. Additionally a link to the repository needs to be posted in the team page.
+
+# 7. Ownership and IP
+The ownership for everything build at the event remains with the team and the team is free to do with it what it wants.
+
+# 8. DEMO your Hack
+In order to participate in the competition it is necessary that you demo your hack. PowerPoint slides or other slide decks are not allowed. Don't be scared to present unfinished hacks. You can still have a chance to win :)
+
+# 9. Disqualification
+We want a fair competition and are not planning to disqualify anyone however if any of the following things is violated we sadly have to disqualify you (and in cases your team):
+
+  - There are commits done after Sunday 11:00.
+  - We see you working on your code after the deadline in order to fix your Demo.
+  - You give the drinks/food provided at the hackathon to non-participants.
+  - You pass on your T-Shirt or Badge during the event to non-participants.

@@ -1,0 +1,53 @@
+extends /templates/page_base
+
+block main-headline
+  h1 Email
+
+block main-content
+  #infoBlock.alert.alert-info
+    p.lead
+      strong IMPORTANT: 
+      | Every email will be wrapped in a template of the following structure
+    blockquote
+      | Hi NAME OF RECIPIENT,
+      br
+      br
+      | YOUR CONTENT
+      br
+      br
+      | Cheers,
+      br
+      | Your jacobsHack! Team
+      br
+      br
+      small NOTE: This is an automatically generated email. Please do not reply to it.
+    p.lead
+      | The content you write is HTML. However new lines will be converted automatically. 
+  #emailAdminView 
+    form
+      .form-group
+        label(for='emailSubjectLine') Subject Line
+        input#emailSubjectLine.form-control(type='text', placeholder='Subject Line', ng-model='vm.subject')
+      .form-group
+        label(for='emailBody') Body
+        textarea.form-control#emailBody(rows="10", ng-model='vm.content')
+      h4 Recipients
+      .radio
+        label
+          input(type='radio', name='recipients', value='accepted', ng-model='vm.type')
+          |  Accepted
+      .radio
+        label
+          input(type='radio', name='recipients', value='unfinished', ng-model='vm.type')
+          |  Unfinished
+      .radio
+        label
+          input(type='radio', name='recipients', value='rejected', ng-model='vm.type')
+          |  Rejected
+      .radio
+        label
+          input(type='radio', name='recipients', value='everyone', ng-model='vm.type')
+          |  Everyone
+      
+      button.btn.btn-default(type='submit', ng-click="vm.sendEmail()") Send Email
+

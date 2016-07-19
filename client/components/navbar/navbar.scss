@@ -1,0 +1,46 @@
+header.attached-top {
+  padding-left: 10px;
+  z-index: 1030;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  // height: 90px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background: white;
+  box-shadow: 0px 1px 4px black;
+  vertical-align: middle;
+
+  .nav {
+    a {
+      background: none;
+      border-radius: 0;
+      color: $jubDarkBlue;
+    }
+
+    li.active > a {
+      border-bottom: 4px solid $jubDarkBlue;
+    }
+
+    li:hover, li:focus {
+      // color: white;
+      // background: $jubLightBlue;
+      &.active:not(.notClickable) > a {
+        background: none;
+        color: $jubDarkBlue;
+      }
+      &:not(.notClickable) > a {
+        border-bottom: 4px solid $jubDarkBlue;
+      }
+      &.notClickable > a {
+        cursor: default;
+      }
+    }
+  }
+}
+
+.logoHeader {
+  height: 39px;
+  margin-left: 10px;
+}

@@ -1,0 +1,488 @@
+mixin jacobsHack()
+  span.jacobsHackText
+    | jacobs
+    em Hack!
+
+extends /templates/page_base
+
+mixin tabLink(ngClass, href, title, elementClass)
+  li(ng-class=ngClass)
+    a(ng-click=href, data-toggle="tab", title=title)
+      span.round-tabs(class=elementClass)
+        i(class!=attributes.iconClass)
+
+mixin tabEntry(id, additionalClasses)
+  block
+  .tab-pane.fade(id=id, class=additionalClasses)
+    h3.head
+      +tabHead()
+    +tabContent()
+
+block main-headline
+  h1 Apply for jacobsHack! Fall 2015
+  .row
+    .col-xs-12
+      p.alert.alert-danger
+        strong IMPORTANT: &nbsp;
+        | Please be aware that registrations for jacobsHack! 2015 have been closed. Follow us on Facebook and Twitter for updates!
+  .row(ng-show="!vm.newApplication")
+    .col-xs-12
+      p.alert.alert-info
+        | Thanks for applying for jacobsHack! Fall 2015. Feel free to continue updating your application.
+  //- span
+
+block main-content
+  .board
+    .board-inner
+      ul#myTab.nav.nav-tabs
+        .liner
+        +tabLink("{active: vm.active === 'info'}", "vm.setActive('info')", 'General Information', 'one')(iconClass='mega-octicon octicon-info')
+        +tabLink("{active: vm.active === 'profile'}", "vm.setActive('profile')", 'Personal Information', 'two')(iconClass='fa fa-user')
+        +tabLink("{active: vm.active === 'additionalInfo'}", "vm.navigate(standardForm.$invalid, 'additionalInfo')", 'Coding Information', 'three')(iconClass='mega-octicon octicon-file-code')
+        +tabLink("{active: vm.active === 'cvUpload'}", "vm.navigate(standardForm.$invalid || additionalForm.$invalid, 'cvUpload')", 'CV Upload', 'four')(iconClass='mega-octicon octicon-file-text')
+        +tabLink("{active: vm.active === 'submit'}", "vm.navigate(standardForm.$invalid || additionalForm.$invalid, 'submit')", 'Submit Application', 'five')(iconClass='mega-octicon octicon-rocket')
+    
+    small#saveRow
+      span(ng-show="vm.lastSaved") Last Saved: {{ vm.lastSaved | date:'dd.MM.yy hh:mm:ss'}}
+      button(class="btn btn-sm btn-jub" ng-click="vm.save()" ng-class="{active: vm.saving}") 
+        span(ng-show="vm.saving") Saving...
+        span(ng-show="!vm.saving") Save Data
+    .tab-content
+      .tab-pane.fade(ng-class="{'in active': vm.active === 'info'}")
+        h3.head General Information
+        p.lead.text-center
+          strong
+            | jacobs
+            i Hack!
+          | &nbsp; Think. Build. Inspire. 
+        p.
+          jacobsHack! - 24h of hacking on anything you like at an international university with students 
+          from all around the world for free. With prizes worth up to 2000€, jacobsHack! gives you the 
+          space to hack on your ideas and meet other like-minded people. 
+        p.
+          With sponsors such as Google, Microsoft and SAP, you might even end up getting your dream job. 
+          You will need a strong skillset, will, and enthusiasm and the most recent copy of your CV. 
+        p
+          | By applying for jacobsHack! you agree to your application data being shared with some of our 
+          | sponsors (for recruiting processes). For more information, click&nbsp;
+          a(href="javascript:void(0);", ng-click="vm.showLegal()") here.
+        p.text-center
+          button.btn.btn-lg.btn-jub(type="button", ng-click="vm.setActive('profile')") 
+            span(ng-show="vm.newApplication") Apply Now!
+            span(ng-hide="vm.newApplication") Update your application
+        p.lead.text-center
+          img(src="assets/images/jacobsHack_logo_hq.png", style="width:200px;")
+          br
+          | I Hack, Therefore I Am!
+        h3.head Sponsors
+        .row.magin-jacobs-sponsor
+          .col-sm-6.col-sm-offset-0.col-xs-8.col-xs-offset-2.col-md-4.col-md-offset-0
+            p.lead.text-center
+              a(href="https://google.com/", target="_blank")
+                img.img-responsive(src="assets/images/sponsors/google.png")
+          .col-sm-6.col-sm-offset-0.col-xs-8.col-xs-offset-2.col-md-4.col-md-offset-0
+            p.lead.text-center
+              a(href="https://microsoft.com/", target="_blank")
+                img.img-responsive(src="assets/images/sponsors/microsoft.png")
+          .col-sm-6.col-sm-offset-3.col-xs-8.col-xs-offset-2.col-md-4.col-md-offset-0
+            p.lead.text-center
+              a(href="https://sap.com/", target="_blank")
+                img.img-responsive(src="assets/images/sponsors/sap.png")
+        .row.magin-jacobs-sponsor
+          .col-xs-6.col-xs-offset-3.col-sm-4.col-sm-offset-4.col-md-2.col-md-offset-5
+            p.lead.text-center
+              a(href="https://cliqz.com/", target="_blank")
+                img.img-responsive(src="assets/images/sponsors/cliqz.png")
+        h3.head Partners
+        .row.magin-jacobs-sponsor
+          .col-sm-6.col-sm-offset-3.col-xs-8.col-xs-offset-2.col-md-4.col-md-offset-1
+            p.lead.text-center
+              a(href="https://jacobs-university.de/", target="_blank")
+                img.img-responsive(src="assets/images/sponsors/jacobs-logo.png")
+          .col-xs-8.col-xs-offset-2.col-sm-6.col-sm-offset-3.col-md-4.col-md-offset-2
+            p.lead.text-center
+              a(href="https://mlh.io/", target="_blank")
+                img.img-responsive(src="assets/images/sponsors/mlh.png")
+          .col-xs-8.col-xs-offset-2.col-sm-6.col-sm-offset-3.col-md-4.col-md-offset-4
+            p.lead.text-center.partner-entry#careerloftLogo
+              a(href="https://careerloft.de/", target="_blank")
+                img.img-responsive(src="assets/images/sponsors/careerloft.jpg")
+        
+      .tab-pane.fade(ng-class="{'in active': vm.active === 'profile'}")
+        h3.head Personal Information
+        form.form-horizontal(role="form", name="standardForm", novalidate)
+          legend General
+          .form-group
+            label.col-sm-2.control-label(for="nameInput") 
+              | Name
+              span.text-danger *
+            .col-sm-10
+              input#nameInput.form-control(type="text", ng-model="vm.personalInformation.name", readonly, ng-required="true")
+          .form-group
+            label.col-sm-2.control-label(for="emailInput")
+              | Email
+              span.text-danger *
+            .col-sm-10
+              input#emailInput.form-control(type="email", ng-model="vm.personalInformation.email", readonly, ng-required="true")
+          .form-group(ng-class="{'has-feedback has-error': (standardForm.university.$invalid && vm.part1Submitted)}")
+            label.col-sm-2.control-label(for="universityInput")
+              | University
+              span.text-danger *
+            .col-sm-10
+              input#universityInput.form-control(name="university", type="text", ng-model="vm.personalInformation.university", ng-required="true") 
+              span.glyphicon.glyphicon-remove.form-control-feedback(ng-show="(standardForm.university.$invalid && vm.part1Submitted)")
+          .form-group(ng-class="{'has-feedback has-error': (standardForm.birthday.$invalid && vm.part1Submitted)}")
+            label.col-sm-2.control-label(for="birthdayInput")
+              | Birthday
+              span.text-danger *
+            .col-sm-4
+              .input-group
+                input#birthdayInput.form-control(name="birthday", type="text", datepicker-popup="dd.MM.yyyy" ng-model="vm.personalInformation.birthday", is-open="pickerOpened", ng-required="true", close-text="Close", placeholder="dd.MM.yyyy", pattern="^(0?[1-9]|[12][0-9]|3[01])[\.](0?[1-9]|1[012])[\.]\d{4}$")
+                span.input-group-btn
+                  button.btn.btn-default(type="button", ng-click="vm.openPicker($event)")
+                    i.glyphicon.glyphicon-calendar
+          .form-group(ng-class="{'has-feedback has-error': (standardForm.phone.$invalid && vm.part1Submitted)}")
+            label.col-sm-2.control-label(for="phoneInput")
+              | Phone
+              span.text-danger *
+            .col-sm-10
+              input#phoneInput.form-control(name="phone", type="text", ng-model="vm.personalInformation.phone", ng-required="true")
+              span.glyphicon.glyphicon-remove.form-control-feedback(ng-show="(standardForm.phone.$invalid && vm.part1Submitted)")
+          .form-group(ng-class="{'has-feedback has-error': (standardForm.nationality.$invalid && vm.part1Submitted)}")
+            label.col-sm-2.control-label(for="nationalityInput")
+              | Nationality
+              span.text-danger *
+            .col-sm-10
+              select#nationalityInput.form-control(name="nationality", type="text", ng-model="vm.personalInformation.nationality", ng-options="c for c in vm.countries", ng-required="true", value="Germany")
+                  option
+          .form-group
+            label.col-sm-2.control-label(for="visaInput")
+              | Visa for Germany Needed?
+              span.text-danger *
+            .col-sm-10
+              .btn-group
+                button.btn.btn-lg.btn-default(type="button", ng-click="vm.personalInformation.visaNeeded = true", ng-class="{active: vm.personalInformation.visaNeeded}")
+                  i.fa.colored.fa-check
+                button.btn.btn-lg.btn-default(type="button", ng-click="vm.personalInformation.visaNeeded = false", ng-class="{active: !vm.personalInformation.visaNeeded}")
+                  i.fa.colored.fa-times
+          legend Address
+          .form-group(ng-class="{'has-feedback has-error': (standardForm.street.$invalid && vm.part1Submitted)}")
+            label.col-sm-2.control-label(for="streetInput")
+              | Street
+              span.text-danger *
+            .col-sm-10
+              input#streetInput.form-control(name="street", type="text", ng-model="vm.personalInformation.address.street", ng-required="true")
+              span.glyphicon.glyphicon-remove.form-control-feedback(ng-show="(standardForm.street.$invalid && vm.part1Submitted)")
+          .form-group(ng-class="{'has-feedback has-error': (standardForm.postal.$invalid && vm.part1Submitted)}")
+            label.col-sm-2.control-label(for="postalInput")
+              | Postal Code
+              span.text-danger *
+            .col-sm-10
+              input#postalInput.form-control(name="postal", type="text", ng-model="vm.personalInformation.address.zip", pattern="[0-9]+", ng-required="true")
+              span.glyphicon.glyphicon-remove.form-control-feedback(ng-show="(standardForm.postal.$invalid && vm.part1Submitted)")
+          .form-group(ng-class="{'has-feedback has-error': (standardForm.city.$invalid && vm.part1Submitted)}")
+            label.col-sm-2.control-label(for="cityInput")
+              | City
+              span.text-danger *
+            .col-sm-10
+              input#cityInput.form-control(name="city", type="text", ng-model="vm.personalInformation.address.city", ng-required="true")
+              span.glyphicon.glyphicon-remove.form-control-feedback(ng-show="(standardForm.city.$invalid && vm.part1Submitted)")
+          .form-group(ng-class="{'has-feedback has-error': (standardForm.state.$invalid && vm.part1Submitted)}")
+            label.col-sm-2.control-label(for="stateInput")
+              | State
+            .col-sm-10
+              input#stateInput.form-control(name="state", type="text", ng-model="vm.personalInformation.address.state")
+              span.glyphicon.glyphicon-remove.form-control-feedback(ng-show="(standardForm.state.$invalid && vm.part1Submitted)")
+          .form-group(ng-class="{'has-feedback has-error': (standardForm.country.$invalid && vm.part1Submitted)}")
+            label.col-sm-2.control-label(for="countryInput")
+              | Country
+              span.text-danger *
+            .col-sm-10
+              select#countryInput.form-control(name="country", type="text", ng-model="vm.personalInformation.address.country", ng-options="c for c in vm.countries", ng-required="true", value="Germany")
+                option
+          legend Social Network Profiles
+          .form-group
+            label.col-sm-2.control-label(for="facebookInput")
+              span Facebook &nbsp;
+              i.fa.fa-lg.colored.fa-facebook
+            .col-sm-10
+              input#facebookInput.form-control(type="text", ng-model="vm.personalInformation.profiles.facebook", placeholder="http://facebook.com/username", pattern="(http|https):\/\/facebook\.com\/.+")
+          .form-group
+            label.col-sm-2.control-label(for="twitterInput") 
+              span Twitter &nbsp;
+              i.fa.fa-lg.colored.fa-twitter
+            .col-sm-10
+              input#twitterInput.form-control(type="text", ng-model="vm.personalInformation.profiles.twitter", placeholder="http://twitter.com/username", pattern="(http|https):\/\/twitter\.com\/.+")
+          .form-group
+            label.col-sm-2.control-label(for="githubInput") 
+              span GitHub &nbsp;
+              i.fa.fa-lg.colored.fa-github
+            .col-sm-10
+              input#githubInput.form-control(type="text", ng-model="vm.personalInformation.profiles.github", placeholder="http://github.com/username", pattern="(http|https):\/\/github\.com\/.+")
+          .form-group
+            label.col-sm-2.control-label(for="googlePlus") 
+              span Google+ &nbsp;
+              i.fa.fa-lg.colored.fa-google-plus
+            .col-sm-10
+              input#googlePlus.form-control(type="text", ng-model="vm.personalInformation.profiles.googleplus", placeholder="https://plus.google.com/+username", pattern="(http|https):\/\/plus\.google\.com\/\+.+")
+          .form-group
+            label.col-sm-2.control-label(for="linkedinInput") 
+              span LinkedIn &nbsp;
+              i.fa.fa-lg.colored.fa-linkedin
+            .col-sm-10
+              input#linkedinInput.form-control(type="text", ng-model="vm.personalInformation.profiles.linkedin", placeholder="https://www.linkedin.com/pub/some-name/...", pattern="(http|https):\/\/www\.linkedin\.com\/pub\/.+\/.+")
+
+        hr
+
+        .row
+          .col-xs-12
+            p
+              tt
+                i.fa.fa-asterisk.text-danger
+                | &nbsp; Field is required to be filled out.
+            .btn-group.btn-block
+              button.btn.btn-default(type="button", ng-click="vm.setActive('info')").col-xs-6
+                span.pull-left
+                  i.fa.fa-chevron-left
+                  | &nbsp; Previous Step
+              button.btn.btn-jub(type="button", ng-click="vm.submitPart1(standardForm)").col-xs-6
+                span.pull-right
+                  | Next Step &nbsp; 
+                  i.fa.fa-chevron-right
+
+      .tab-pane.fade(ng-class="{'in active': vm.active === 'additionalInfo'}")
+        h3.head Additional Information
+
+        form.form-horizontal(role="form", name="additionalForm")
+          .form-group(ng-class="{'has-feedback has-error': (additionalForm.expertise.$invalid && vm.part2Submitted)}")
+            label.col-sm-4.control-label(for="disciplineInput")
+              | What's your main expertise?
+              span.text-danger *
+            .col-sm-8
+              select#disciplineInput.form-control(name="expertise", ng-model="vm.additionalInformation.discipline", ng-required="true", value="development")
+                option(value="development", selected) Development
+                option(value="design") Designer
+                option(value="business") Business
+          .form-group(ng-class="{'has-feedback has-error': (additionalForm.shirtsize.$invalid && vm.part2Submitted)}")
+            label.col-sm-4.control-label(for="tshirtSizeInput")
+              | What's your T-Shirt size?
+              span.text-danger *
+            .col-sm-8
+              select#tshirtSizeInput.form-control(name="shirtsize", ng-model="vm.additionalInformation.shirt.size", ng-required="true", value="S")
+                option(value="S", selected) S
+                option(value="M") M
+                option(value="L") L
+                option(value="XL") XL
+                option(value="XXL") XXL
+          .form-group(ng-class="{'has-feedback has-error': (additionalForm.shirttype.$invalid && vm.part2Submitted)}")
+            label.col-sm-4.control-label(for="tshirtTypeInput")
+              | Male or Female T-Shirt?
+              span.text-danger *
+            .col-sm-8
+              select#tshirtTypeInput.form-control(name="shirttype", ng-model="vm.additionalInformation.shirt.type", ng-required="true", value="male")
+                option(value="male", selected) Male 
+                option(value="female") Female
+          .form-group
+            label.col-sm-4.control-label(for="careerloftInput")
+              | I have a Careerloft Account
+              span.text-danger *
+            .col-sm-8
+              .btn-group
+                button.btn.btn-lg.btn-default(type="button", ng-click="vm.additionalInformation.careerloft = true", ng-class="{active: vm.additionalInformation.careerloft}")
+                  i.fa.colored.fa-check
+                button.btn.btn-lg.btn-default(type="button", ng-click="vm.additionalInformation.careerloft = false", ng-class="{active: !vm.additionalInformation.careerloft}")
+                  i.fa.colored.fa-times
+          .form-group(ng-class="{'has-feedback has-error': (additionalForm.wheredidyouhear.$invalid && vm.part2Submitted)}")
+            label.col-sm-4.control-label(for="whereDidYouHearInput")
+              | Where did you hear about jacobsHack!?
+              span.text-danger *
+            .col-sm-8
+              textarea#whereDidYouHearInput.form-control(name="wheredidyouhear", ng-model="vm.additionalInformation.whereDidYouHear", rows="3", ng-required="true")
+              span.glyphicon.glyphicon-remove.form-control-feedback(ng-show="(additionalForm.wheredidyouhear.$invalid && vm.part2Submitted)")
+          .form-group(ng-class="{'has-feedback has-error': (additionalForm.experience.$invalid && vm.part2Submitted)}")
+            label.col-sm-4.control-label(for="previousHackathonsInput")
+              | Previous Hackathon Experience
+              span.text-danger *
+            .col-sm-8
+              span.help-block
+                | Did you attend previous hackathons? What's your experience?
+              textarea#previousHackathonsInput.form-control(name="experience", ng-model="vm.additionalInformation.previousHackathons", rows="6", ng-required="true")
+              span.glyphicon.glyphicon-remove.form-control-feedback(ng-show="(additionalForm.experience.$invalid && vm.part2Submitted)")
+          .form-group(ng-class="{'has-feedback has-error': (additionalForm.projects.$invalid && vm.part2Submitted)}")
+            label.col-sm-4.control-label(for="coolProjectsInput")
+              | Previous (Cool) Projects
+              span.text-danger *
+            .col-sm-8
+              span.help-block
+                | Tell us about some cool projects you worked on. This can be private or professional projects.
+              textarea#coolProjectsInput.form-control(name="projects", ng-model="vm.additionalInformation.coolProjects", rows="6", ng-required="true")
+              span.glyphicon.glyphicon-remove.form-control-feedback(ng-show="(additionalForm.projects.$invalid && vm.part2Submitted)")
+          .form-group(ng-class="{'has-feedback has-error': (additionalForm.restrictions.$invalid && vm.part2Submitted)}")
+            label.col-sm-4.control-label(for="dietaryRestrictions")
+              | Dietary Restrictions
+            .col-sm-8
+              span.help-block
+                | Please tell about allergies you might have or whether you vegetarian, vegan or have other restrictions that we should be aware of.
+              textarea#dietaryRestrictions.form-control(name="restrictions", ng-model="vm.additionalInformation.dietaryRestrictions", rows="2")
+              span.glyphicon.glyphicon-remove.form-control-feedback(ng-show="(additionalForm.restrictions.$invalid && vm.part2Submitted)")
+          .form-group
+            label.col-sm-4.control-label(for="remarksInput") Additional Remarks
+            .col-sm-8
+              span.help-block
+                | Here you can leave some additional remarks why we should choose you. Be creative :) Also please let us know of any special requirements/needs you may have.
+              textarea#remarksInput.form-control(ng-model="vm.additionalInformation.remarks", rows="6")
+          legend Preferred Teammates
+          p.
+            You can name three other applicants that you would prefer to have at the hackathon as teammates.
+            Note this does not mean that if one of you gets accepted all of you do.
+          .form-group
+            .col-sm-4
+              input#teammate1Input.form-control(type="text", ng-model="vm.teammate1", placeholder="Teammate 1")
+            .col-sm-4
+              input#teammate2Input.form-control(type="text", ng-model="vm.teammate2", placeholder="Teammate 2")
+            .col-sm-4
+              input#teammate3Input.form-control(type="text", ng-model="vm.teammate3", placeholder="Teammate 3")
+        hr
+        .row
+          .col-xs-12
+            p
+              tt
+                i.fa.fa-asterisk.text-danger
+                | &nbsp; Field is required to be filled out.
+            .btn-group.btn-block
+              button.btn.btn-default(type="button", ng-click="vm.setActive('profile')").col-xs-6
+                span.pull-left
+                  i.fa.fa-chevron-left
+                  | &nbsp; Previous Step
+              button.btn.btn-jub(type="button", ng-click="vm.submitPart2(additionalForm)").col-xs-6
+                span.pull-right
+                  | Next Step &nbsp; 
+                  i.fa.fa-chevron-right
+      .tab-pane.fade(ng-class="{'in active': vm.active === 'cvUpload'}")
+        h3.head CV Upload
+        p.lead
+          strong Important: &nbsp;
+          | By uploading your CV here and submitting the application you agree to the terms described 
+          a(href="javascript:void(0);" ng-click="vm.showLegal()") here
+          | .
+        form.form-horizontal(role="form", name="cvForm")
+          .form-group(ng-class="{'has-feedback has-error': (!vm.cvUploaded && vm.part3Submitted)}")
+            .col-xs-12.col-sm-6.col-sm-offset-3
+              p(ng-show="vm.cvUploaded")
+                | Your CV was uploaded. You can see it here: &nbsp;
+                a.btn.btn-sm.btn-jub(ng-href="/api/applications/cv/{{vm.userId}}", target="_blank") 
+                  i.fa.fa-cloud-download
+                  | &nbsp; Download CV
+              hr
+              .input-group
+                span.input-group-btn
+                  button.btn.btn-default(ng-click="vm.openFileDialogWindow()", type="button") Choose File
+                input#cvUploadFile(type="file", ng-file-select="vm.onFileSelect($files)", accept="application/pdf").hidden
+                input#cvUploadText(type="text", ng-model="vm.cvFileName", readonly).form-control
+                span.input-group-btn
+                  button.btn.btn-success(ng-click="vm.showLegalForUpload()", type="button", ng-disabled="!vm.fileSelected") Upload CV
+              hr
+              .progress.progress-striped
+                .progress-bar.progress-bar-success(role="progressbar", aria-valuenow="{{vm.progressCvUpload}}", aria-valuemin="0", aria-valuemax="100", style="width:{{vm.progressCvUpload}}%;")
+                  span.sr-only {{vm.progressCvUpload}}% Complete
+                  | {{vm.progressCvUpload}}%
+        hr
+        .row
+          .col-xs-12
+            .btn-group.btn-block
+              button.btn.btn-default(type="button", ng-click="vm.setActive('additionalInfo')").col-xs-6
+                span.pull-left
+                  i.fa.fa-chevron-left
+                  | &nbsp; Previous Step
+              button.btn.btn-jub(type="button", ng-click="vm.submitPart3(cvForm)").col-xs-6
+                span.pull-right
+                  | Next Step &nbsp; 
+                  i.fa.fa-chevron-right
+      .tab-pane.fade(ng-class="{'in active': vm.active === 'submit'}")
+        h3.head Submit Application
+        p
+          | You are almost done with your application for &nbsp;
+          strong
+            | jacobs
+            i Hack!
+          | &nbsp;- Fall 2015.
+        p
+          | After submitting your application can update your application until the registration closes. Once we closed the application
+          | phase we will review all applications and notify the lucky people that have been chosen to take
+          | part in 
+          strong
+            | jacobs
+            i Hack!
+          | &nbsp;- Fall 2015
+        p.lead.text-center 
+          img(src="assets/images/jacobsHack_logo_hq.png", style="width:200px;")
+          br
+          | I Hack, Therefore I Am!
+        hr
+        p(ng-click="vm.conditionsAccepted = vm.conditionsAccepted ? false : true")
+          i.fa.fa-lg.colored(ng-class="{'fa-square-o': !vm.conditionsAccepted, 'fa-check-square-o': vm.conditionsAccepted}")
+          | &nbsp; I have read and herewith accept the conditions, which are outlined&nbsp;
+          a(href="javascript:void(0);", ng-click="vm.showLegal()") here
+          | , and apply for jacobsHack! Fall 2015.
+        p(ng-click="vm.codeOfConductAccepted = vm.codeOfConductAccepted ? false : true")
+          i.fa.fa-lg.colored(ng-class="{'fa-square-o': !vm.codeOfConductAccepted, 'fa-check-square-o': vm.codeOfConductAccepted}")
+          | &nbsp; I will at all times abide by and conform to the &nbsp;
+          a(href="http://mlh.io/code-of-conduct", target="_blank") Major League Hacking Code of Conduct
+          | &nbsp;while at the event.
+        hr
+        .row
+          .col-xs-12
+            .btn-group.btn-block
+              button.btn.btn-lg.btn-default(type="button", ng-click="vm.setActive('cvUpload')").col-xs-6
+                span.pull-left
+                  i.fa.fa-chevron-left
+                  | &nbsp; Previous Step
+              button.btn.btn-lg.btn-success(type="button", ng-click="vm.submitApplication()", ng-disabled="!vm.conditionsAccepted || !vm.codeOfConductAccepted").col-xs-6
+                span.pull-right
+                  span(ng-show="vm.newApplication") Submit Application&nbsp; 
+                  span(ng-hide="vm.newApplication") Update Application&nbsp; 
+                  i.octicon.octicon-rocket
+      .clearfix
+
+  #legalModal.modal.fade(tabindex="-1", role="dialog", aria-labelledby="legalTitle")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type="button", data-dismiss="modal")
+            span(aria-hidden="true") &times;
+          h4#legalTitle.modal-title Legal Terms
+        .modal-body
+          p
+            strong Welcome to jacobsHack! 
+          p
+            | The personal data you are about to send will only be processed for event administration processes. 
+            | As soon as jacobsHack! has ended, the data will be deleted at Jacobs University (10/31/2016). 
+            | Your email-adress and CV however are sent to Google Inc., Microsoft Inc., SAP SE and other jacobsHack! sponsors. 
+            | for recruiting processes.     
+          p
+            | Please keep in mind that we, Jacobs University, do not validate or verifiy your data in any way before 
+            | sending it to our sponsors and we do not have any means to control the further processing of your data 
+            | once it has been transferred.
+          p(ng-show="vm.readTerms")
+            | By applying you are giving formal consent (according section 4a of the German Federal Data 
+            | Protection Act, FDPA) for the data transfer explained above. You can revoke your consent anytime by 
+            | emailing 
+            a(href="mailto:legal@jacobshack.com", target="_blank") legal@jacobshack.com
+            | , but this will not affect data already transferred to our sponsors. 
+          p(ng-hide="vm.readTerms")
+            | If you hit "I agree" you are giving a formal consent (according section 4a of the German Federal Data 
+            | Protection Act, FDPA) for the data transfer explained above. You can revoke your consent anytime by 
+            | emailing 
+            a(href="mailto:legal@jacobshack.com", target="_blank") legal@jacobshack.com
+            | , but this will not affect data already transferred to our sponsors.
+          p
+            | We are sanctioned by and participate in, 
+            a(href="https://mlh.io", target="_blank") Major League Hacking (MLH)
+            |. You authorize us to share certain application/registration information for event administration, 
+            | ranking, MLH administration, and occasional messages about hackathons in line with the 
+            a(href="http://mlh.io/privacy", target="_blank") MLH Privacy Policy
+            |.
+        .modal-footer
+          button.btn.btn-default(type="button", data-dismiss="modal", ng-show="vm.readTerms") Close
+          button.btn.btn-danger(type="button", ng-click="vm.disagreeTerms()", ng-hide="vm.readTerms") No, Thanks
+          button.btn.btn-success(type="button", ng-click="vm.agreeTermsAndUpload()", ng-hide="vm.readTerms") I Agree. Upload CV

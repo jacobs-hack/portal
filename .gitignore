@@ -1,0 +1,13 @@
+node_modules
+public
+.tmp
+.sass-cache
+client/bower_components
+dist
+/server/config/local.env.js
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+server/data/cvs/*.pdf
+data/cvs/*.pdf
+*.pdf

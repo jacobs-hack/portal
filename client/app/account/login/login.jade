@@ -1,0 +1,30 @@
+extends /templates/page_base
+
+block main-headline
+  h1 Login
+
+block main-content
+  form.form(name='form', ng-submit='vm.login(form)', novalidate='')
+    .form-group.has-feedback(ng-class="{'has-error': (form.email.$error.email || form.email.$error.required)}")
+      label Email
+      input.form-control(type='email', name='email', ng-model='vm.user.email')
+      p.help-block(ng-show="form.email.$error.email")
+        | Please enter a valid email
+    .form-group
+      label Password
+      input.form-control(type='password', name='password', ng-model='vm.user.password')
+
+    .form-group.has-error
+      p.help-block(ng-show='form.email.$error.required && form.password.$error.required && submitted')
+        | Please enter your email and password.
+      p.help-block {{ vm.errors.other }}
+
+    div
+      p.help-block
+        | Forgot your password? Click 
+        a(href="/forgot-password") HERE
+      button.btn.btn-jub.btn-lg.btn-login(type='submit')
+        | Login
+      = ' '
+      a.btn.btn-jub.btn-lg.btn-register(href='/signup')
+        | Register

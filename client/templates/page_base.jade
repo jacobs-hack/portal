@@ -1,0 +1,19 @@
+div(ng-include='"components/navbar/navbar.html"')
+
+section#banner.hero-unit.hidden
+  block hero-banner
+
+#mainContainer.container-fluid
+  .row
+    #highlightContainer.col-sm-12.col-md-8.col-md-offset-2.col-lg-6.col-lg-offset-3
+      .row
+        .col-sm-12
+          block main-headline
+            h1 Huhu
+          hr.no-bottom-margin
+        .col-sm-12
+          block main-content
+            p 
+            | I Could Be Some Content
+
+include footer
