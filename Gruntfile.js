@@ -445,8 +445,8 @@ module.exports = function (grunt) {
       },
       prod: {
         NODE_ENV: 'production'
-      },
-      all: require('./server/config/local.env')
+      }
+      // all: require('./server/config/app')
     },
 
     // Compiles Jade to html
@@ -622,13 +622,13 @@ module.exports = function (grunt) {
 
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
-      return grunt.task.run(['build', 'env:all', 'env:prod', 'express:prod', 'open', 'express-keepalive']);
+      return grunt.task.run(['build', /*'env:all'*/, 'env:prod', 'express:prod', 'open', 'express-keepalive']);
     }
 
     if (target === 'debug') {
       return grunt.task.run([
         'clean:server',
-        'env:all',
+        // 'env:all',
         'injector:sass', 
         'concurrent:server',
         'injector',
@@ -640,7 +640,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
-      'env:all',
+      //'env:dev',
       'injector:sass', 
       'concurrent:server',
       'injector',
