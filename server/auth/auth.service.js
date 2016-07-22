@@ -24,10 +24,10 @@ function isAuthenticated() {
       } else if (!req.headers.authorization && req.cookies && req.cookies.token) {
         req.headers.authorization = 'Bearer ' + req.cookies.token.replace(/\"/g, '');
       }
-      // if(req.query && req.query.hasOwnProperty('access_token') && req.cookies && req.cookies.token) {
-      //   console.log('cookie', req.cookies.token.replace(/\"/g, ''));
-      //   console.log('query', req.query.access_token);
-      // }
+      if(req.query && req.query.hasOwnProperty('access_token') && req.cookies && req.cookies.token) {
+        console.log('cookie', req.cookies.token.replace(/\"/g, ''));
+        console.log('query', req.query.access_token);
+      }
       validateJwt(req, res, next);
     })
     // Attach user to request
@@ -64,7 +64,7 @@ function hasRole(roleRequired) {
  * Returns a jwt token signed by the app secret
  */
 function signToken(id) {
-  return jwt.sign({ _id: id }, config.secrets.session, { expiresInMinutes: 60*5 });
+  return jwt.sign({ _id: id }, config.secrets.session, { expiresIn: 60*5 });
 }
 
 /**
