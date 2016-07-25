@@ -42,6 +42,13 @@ var all = {
       }
     }
   },
+  OAuth:{
+    'facebook':{
+      'clientID': '635831143233205',
+      'clientSecret': 'ff895c017dfd60576b0809b62d43514d',
+      'callbackURL': '/auth/facebook/callback'
+    }
+  },
   zoho: {
     password: process.env.ZOHO_PW || process.env.CUSTOMCONNSTR_ZOHO_PW || '',
     email: process.env.ZOHO_EMAIL || process.env.APPSETTING_ZOHO_EMAIL || 'noreply@jacobshack.com'
