@@ -1,5 +1,7 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var facebookStrategy = require('passport-facebook').Strategy;
+var OAuth = require('../../config/environment').OAuth;
 
 exports.setup = function (User, config) {
   passport.use(new LocalStrategy({
@@ -20,6 +22,16 @@ exports.setup = function (User, config) {
         }
         return done(null, user);
       });
+    }
+  ));
+
+  passport.use(new facebookStrategy({
+    clientID: OAuth.facebook.clientID,
+    clientSecret: OAuth.facebook.clientSecret,
+    callbackURL: OAuth.facebook.callbackURL
+    },
+    function(accessToken, refreshToken, profile, cb) {
+      console.log(profile);
     }
   ));
 };
