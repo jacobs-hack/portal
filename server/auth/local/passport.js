@@ -31,7 +31,36 @@ exports.setup = function (User, config) {
     callbackURL: OAuth.facebook.callbackURL
     },
     function(accessToken, refreshToken, profile, cb) {
-      console.log(profile);
+      process.nextTick(function() {
+
+        User.findOne({'facebook.id': profile.id}, function(err, user){
+          if (err) return done(err);
+
+          if (user){
+            return done(null, user);
+          }
+          else{
+            // add new user
+            var newUser = new User();
+
+            newUser.facebook.id = profile.id;
+            newUser.facebook.token = accessToken;
+            newUser.facebook.name = profile.name.givenName + ' ' + profile.name.familyName;
+            console.log(profile.email);
+            console.log(profile.emails);
+            // if (profile.emails !== "undefined") newUser.facebook.email = profile.emails[0].value;
+            newUser.provider = 'facebook';
+
+            // save created user
+            newUser.save(function(err){
+              if(err)
+                throw err;
+            });  
+          }
+        });
+
+      });  
+
     }
   ));
 };

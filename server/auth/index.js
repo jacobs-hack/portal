@@ -13,14 +13,13 @@ var router = express.Router();
 router.use('/local', require('./local'));
 
 /* facebook auth */
-router.use('/facebook', passport.authenticate('facebook'));
+router.use('/facebook', passport.authenticate('facebook', { scope: 'email'}));
 
 /* callback function*/
-router.use('/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }),
-  function(req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/');
-    console.log("Successfully logged in.");
-});
+router.use('/facebook/callback', passport.authenticate('facebook', 
+	{
+	 successRedirect: '/', 	
+	 failureRedirect: '/login' 
+	}));
 
 module.exports = router;
