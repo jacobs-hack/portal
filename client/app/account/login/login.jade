@@ -28,3 +28,8 @@ block main-content
       = ' '
       a.btn.btn-jub.btn-lg.btn-register(href='/signup')
         | Register
+    div
+      p.text-info
+        | Sign in With: 
+      span.divider  
+      span.fa.fa-facebook-official(ng-click="vm.loginOauth('facebook')" type = 'button')    
