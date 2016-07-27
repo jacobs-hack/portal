@@ -28,9 +28,10 @@ exports.setup = function (User, config) {
   passport.use(new facebookStrategy({
     clientID: OAuth.facebook.clientID,
     clientSecret: OAuth.facebook.clientSecret,
-    callbackURL: OAuth.facebook.callbackURL
+    callbackURL: OAuth.facebook.callbackURL,
+    profileFields: ['id', 'displayName', 'email', 'birthday', 'first_name', 'last_name', 'middle_name', 'gender']
     },
-    function(accessToken, refreshToken, profile, cb) {
+    function(accessToken, refreshToken, profile, done) {
       process.nextTick(function() {
 
         User.findOne({'facebook.id': profile.id}, function(err, user){
@@ -39,24 +40,22 @@ exports.setup = function (User, config) {
           if (user){
             return done(null, user);
           }
-          else{
-            // add new user
-            var newUser = new User();
+          // add new user
+          var newUser = new User();
 
-            newUser.facebook.id = profile.id;
-            newUser.facebook.token = accessToken;
-            newUser.facebook.name = profile.name.givenName + ' ' + profile.name.familyName;
-            console.log(profile.email);
-            console.log(profile.emails);
-            // if (profile.emails !== "undefined") newUser.facebook.email = profile.emails[0].value;
-            newUser.provider = 'facebook';
+          newUser.facebook.id = profile.id;
+          newUser.facebook.token = accessToken;
+          newUser.facebook.name = profile.name.givenName + ' ' + profile.name.familyName;
+          newUser.facebook.email = profile.emails[0].value;
+          newUser.provider = profile.provider;
 
-            // save created user
-            newUser.save(function(err){
-              if(err)
-                throw err;
-            });  
-          }
+          // save created user
+          newUser.save(function(err){
+            if(err)
+              throw err;
+          });  
+          done(null, newUser);
+          
         });
 
       });  
