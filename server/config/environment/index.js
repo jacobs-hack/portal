@@ -46,7 +46,12 @@ var all = {
     'facebook':{
       'clientID': '635831143233205',
       'clientSecret': 'ff895c017dfd60576b0809b62d43514d',
-      'callbackURL': '/auth/facebook/callback'
+      'callbackURL': 'http://localhost:9000/auth/facebook/callback'
+    },
+    'github':{
+      'clientID': 'd9b72b00afed1bab9d03',
+      'clientSecret': '968b442630134d2dbe846891b7e04da09ed8a0b8',
+      'callbackURL' : 'http://localhost:9000/auth/github/callback/'
     }
   },
   zoho: {

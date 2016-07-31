@@ -24,7 +24,12 @@ var UserSchema = new Schema({
     email: String
   },
   twitter: {},
-  github: {},
+  github: {
+    id: String,
+    token: String,
+    name: String,
+    email: String
+  },
   google: {}
 });
 

@@ -32,5 +32,8 @@ block main-content
       p.text-info
         | Sign in With: 
       span.divider  
-      span.fa.fa-facebook-square.fa-4x(ng-click="vm.loginOauth('facebook')" type = 'button')
+      a
+        span.fa.fa-facebook-square.fa-4x(ng-click="vm.loginOauth('facebook')")    
+      a
+        span.fa.fa-github.fa-4x(ng-click="vm.loginOauth('github')")     
             

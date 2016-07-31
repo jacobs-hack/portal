@@ -13,13 +13,22 @@ var router = express.Router();
 router.use('/local', require('./local'));
 
 /* facebook auth */
-router.use('/facebook', passport.authenticate('facebook', { scope: 'email'}));
+router.use('/facebook', passport.authenticate('facebook', { scope: 'email', session:false}));
 
-/* callback function*/
+/* facebook callback function*/
 router.use('/facebook/callback', passport.authenticate('facebook', 
 	{
 	 successRedirect: '/', 	
 	 failureRedirect: '/login' 
 	}));
+
+/* github auth*/
+router.use('/github', passport.authenticate('github', {scope: ['user', 'user:email']}));
+
+/* github callback */
+router.use('/github/callback', passport.authenticate('github', {
+	successRedirect: '/',
+	failureRedirect: '/login'
+}));
 
 module.exports = router;
