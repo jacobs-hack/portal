@@ -26,6 +26,14 @@ exports.setup = function (User, config) {
     }
   ));
 
+  passport.serializeUser(function(user, done)
+    {
+      done(null, user);
+    });
+  passport.deserializeUser(function(obj, done){
+    done(null, obj);
+  });
+
   /* facebook strategy */
   passport.use(new facebookStrategy({
     clientID: OAuth.facebook.clientID,
@@ -57,7 +65,7 @@ exports.setup = function (User, config) {
               throw err;
           });
 
-          // done(null, newUser);
+          return done(null, newUser);
           
         });
 
@@ -70,11 +78,13 @@ exports.setup = function (User, config) {
   passport.use(new githubStrategy({
       clientID: OAuth.github.clientID,
       clientSecret: OAuth.github.clientSecret,
-      callbackURL: OAuth.github.callbackURL,
-      profileFields: ['user:email']
+      callbackURL: OAuth.github.callbackURL
+      //profileFields: ['user:email']
     },
     function(accessToken, refreshToken, profile, done) {
       process.nextTick(function() {
+
+        // console.log(profile.displayName + " " + profile.emails[0].value); 
 
         User.findOne({'github.id': profile.id}, function(err, user){
           if (err) return done(err);
@@ -82,11 +92,11 @@ exports.setup = function (User, config) {
           if (user) return done(null, user);
 
           // add new user
-          /*var newUser = new User();
+          var newUser = new User();
 
           newUser.github.id = profile.id;
           newUser.github.token = accessToken;
-          newUser.github.name = profile.name.givenName + ' ' + profile.name.familyName;
+          newUser.github.name = profile.displayName;
           newUser.github.email = profile.emails[0].value;
           newUser.provider = profile.provider;
 
@@ -94,19 +104,14 @@ exports.setup = function (User, config) {
           newUser.save(function(err){
             if(err)
               throw err;
-          });*/
-          console.log(profile);  
-          // done(null, newUser);
+          });
+
+          return done(null, newUser);
+          
         });
       })
     }
   ));  
 
-  passport.serializeUser(function(user, done)
-    {
-      done(null, user);
-    });
-  passport.deserializeUser(function(obj, done){
-    done(null, obj);
-  });
+ 
 };
