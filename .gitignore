@@ -11,3 +11,4 @@ dist
 server/data/cvs/*.pdf
 data/cvs/*.pdf
 *.pdf
+.idea/
